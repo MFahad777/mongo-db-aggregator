@@ -1,0 +1,55 @@
+{
+  "name": "mongo-db-aggregator",
+  "version": "1.1.0",
+  "description": "Chainable MongoDB aggregation builder for Node.js and Mongoose",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "predev": "rimraf -rf dist/**",
+    "prebuild": "rimraf ./dist",
+    "test": "jest"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./stages": {
+      "import": "./dist/stages/index.js",
+      "require": "./dist/stages/index.js"
+    },
+    "./builders": {
+      "import": "./dist/builders/index.js",
+      "require": "./dist/builders/index.js"
+    },
+    "./operators": {
+      "import": "./dist/operators/index.js",
+      "require": "./dist/operators/index.js"
+    }
+  },
+  "keywords": [
+    "mongodb",
+    "aggregation",
+    "fluent",
+    "builder",
+    "mongoose"
+  ],
+  "author": "Muhammad Fahad",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^22.15.17",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MFahad777/mongo-db-aggregator"
+  },
+  "homepage": "https://github.com/MFahad777/mongo-db-aggregator/blob/main/README.md"
+}
