@@ -1,6 +1,9 @@
 import {Model, PipelineStage, AggregateOptions} from 'mongoose';
 import {PaginationOptions, paginate} from "./helpers/paginate";
 
+import mergeWith from "lodash.mergewith";
+import {mergeCustomizer} from "./helpers/mergeCustomizer";
+
 type MacroFunction = () => Record<string, any> | Record<string, any>[];
 
 type AggBuilder<T> = Omit<AggregatorBuilder<T>, 'exec' | 'toJSON'>;
@@ -56,7 +59,17 @@ export class AggregatorBuilder<T> {
     }
 
     match(query: PipelineStage | object) {
-        this.pipeline.push({$match: query});
+        const lastIndex = this.pipeline.length - 1;
+        const lastStage = this.pipeline[lastIndex];
+
+        if (lastStage && '$match' in lastStage) {
+            // Merge only if the last stage is a $match
+            const mergedMatch = mergeWith({}, lastStage['$match'], query, mergeCustomizer);
+            this.pipeline[lastIndex] = { $match: mergedMatch };
+        } else {
+            this.pipeline.push({ $match: query });
+        }
+
         return this;
     }
 

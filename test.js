@@ -344,4 +344,45 @@ describe('Aggregator Use Cases', () => {
     expect(result).toEqual([]);
   });
 
+  it('should merge match stage', function() {
+
+    const result = aggregator(Model)
+        .match({ b: { $in : ["2"] } })
+        .match({ a: 1 })
+        .toJSON()
+
+    expect(result.length).toBe(1);
+    expect(result).toEqual([{"$match":{"b":{"$in":["2"]},"a":1}}]);
+  });
+
+  it('should not merge match stage since there is sort stage in between', function() {
+
+    const result = aggregator(Model)
+    .match({ a: 1 }).sort({ name: 1 }).match({ b: 2 }).toJSON();
+
+    expect(result).toEqual([
+      { $match: { a: 1 } },
+      { $sort: { name: 1 } },
+      { $match: { b: 2 } }
+    ]);
+  });
+
+  it('should merge $match stages with overlapping keys using array strategy', () => {
+
+    const result = aggregator(Model)
+    .match({tags: {$in: ['a']}})
+    .match({tags: {$in: ['b']}})
+    .toJSON();
+
+    expect(result).toEqual([
+      {
+        $match: {
+          tags: {
+            $in: ['a', 'b']
+          }
+        }
+      }
+    ]);
+  });
+
 });

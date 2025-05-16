@@ -1,6 +1,6 @@
 {
   "name": "mongo-db-aggregator",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Chainable MongoDB aggregation builder for Node.js and Mongoose",
   "main": "dist/index.js",
   "scripts": {
@@ -38,6 +38,7 @@
   "author": "Muhammad Fahad",
   "license": "MIT",
   "devDependencies": {
+    "@types/lodash.mergewith": "^4.6.9",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.15.17",
     "jest": "^29.7.0",
@@ -51,5 +52,8 @@
     "type": "git",
     "url": "https://github.com/MFahad777/mongo-db-aggregator"
   },
-  "homepage": "https://github.com/MFahad777/mongo-db-aggregator/blob/main/README.md"
+  "homepage": "https://github.com/MFahad777/mongo-db-aggregator/blob/main/README.md",
+  "dependencies": {
+    "lodash.mergewith": "^4.6.2"
+  }
 }
