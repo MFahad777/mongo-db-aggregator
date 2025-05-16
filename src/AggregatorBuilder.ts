@@ -3,6 +3,8 @@ import {PaginationOptions, paginate} from "./helpers/paginate";
 
 type MacroFunction = () => Record<string, any> | Record<string, any>[];
 
+type AggBuilder<T> = Omit<AggregatorBuilder<T>, 'exec' | 'toJSON'>;
+
 export class AggregatorBuilder<T> {
     private pipeline: Object[] = [];
 
@@ -53,7 +55,7 @@ export class AggregatorBuilder<T> {
         return this.pipeline;
     }
 
-    match(query: PipelineStage) {
+    match(query: PipelineStage | object) {
         this.pipeline.push({$match: query});
         return this;
     }
@@ -126,6 +128,16 @@ export class AggregatorBuilder<T> {
 
     paginate(options: PaginationOptions) {
         this.pipeline.push(...paginate(options));
+        return this;
+    }
+
+    cond(condition : Function | boolean, callback : (builder: AggBuilder<T>) => void) {
+        const shouldApply = typeof condition === 'function' ? condition() : condition;
+
+        if (shouldApply) {
+            callback(this as AggBuilder<T>);
+        }
+
         return this;
     }
 

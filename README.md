@@ -111,6 +111,39 @@ const [result] = await aggregator(Model).useMacro('customMatchAndSort').
     limit(1).exec();
 ```
 
+### Using condition
+```javascript
+
+const result = await aggregator(Model).
+    match({isActive: true}).
+    cond(true, b => b.match({role: 'admin'})).
+    exec();
+
+const result = await aggregator(Model).
+    match({isActive: true}).
+    cond(false, b => b.match({role: 'admin'})).
+    exec();
+
+const result = await aggregator(Model)
+.cond(() => true, b => b.limit(5)).exec();
+
+const result = await 
+    aggregator(Model).cond(() => false, b => b.limit(5)).exec();
+```
+
+### Nested Condition
+```javascript
+
+const result = await aggregator(Model)
+.cond(
+    true,
+    (agg) => 
+        agg.cond(true, (nestAgg) => nestAgg.match({isActive: true})
+    )
+)
+
+```
+
 ## 📚 API Overview
 ### Builders
 - ProjectBuilder
