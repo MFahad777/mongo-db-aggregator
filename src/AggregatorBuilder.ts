@@ -4,7 +4,7 @@ import {PaginationOptions, paginate} from "./helpers/paginate";
 import mergeWith from "lodash.mergewith";
 import {mergeCustomizer} from "./helpers/mergeCustomizer";
 
-type MacroFunction = () => Record<string, any> | Record<string, any>[];
+type MacroFunction = (...args : any[]) => Record<string, any> | Record<string, any>[];
 
 type AggBuilder<T> = Omit<AggregatorBuilder<T>, 'exec' | 'toJSON'>;
 
@@ -38,12 +38,12 @@ export class AggregatorBuilder<T> {
         return this.macros[name];
     }
 
-    useMacro(name: string): this {
+    useMacro(name: string, ...args : any[]): this {
         const macro = AggregatorBuilder.getMacro(name);
 
         if (!macro) throw new Error(`Macro "${name}" not found.`);
 
-        const result = macro();
+        const result = macro(...args);
 
         if (Array.isArray(result)) {
             this.pipeline.push(...result);

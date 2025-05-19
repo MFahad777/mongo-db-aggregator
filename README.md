@@ -141,7 +141,23 @@ const result = await aggregator(Model)
         agg.cond(true, (nestAgg) => nestAgg.match({isActive: true})
     )
 )
+```
 
+### Macros With Arguments
+```javascript
+AggregatorClass.registerMacro("macroWithArgs", (userId, userNewId) => {
+      return [
+          new MatchStage({
+            id: userId,
+            newUserId: userNewId
+          }).build()
+      ]
+    })
+
+    const result =
+        aggregator(Model)
+        .useMacro("macroWithArgs", 5, 6)
+            .toJSON()
 ```
 
 ## 📚 API Overview

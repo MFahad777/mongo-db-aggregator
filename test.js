@@ -38,6 +38,27 @@ afterAll(async () => {
 });
 
 describe('Aggregator Use Cases', () => {
+
+  it('should take arguments in the macros', function() {
+
+    AggregatorClass.registerMacro("macroWithArgs", (userId, userNewId) => {
+      return [
+          new MatchStage({
+            id: userId,
+            newUserId: userNewId
+          }).build()
+      ]
+    })
+
+    const result =
+        aggregator(Model)
+        .useMacro("macroWithArgs", 5, 6)
+            .toJSON()
+
+    expect(result).toEqual([ { '$match': { id: 5, newUserId: 6 } } ])
+
+  });
+
   it('should match company name with PBADGE', async () => {
     const data = await aggregator(Model).match({companyName: 'PBADGE'}).exec();
     expect(data.length).toBe(1);
