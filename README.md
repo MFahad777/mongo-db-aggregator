@@ -191,6 +191,9 @@ AggregatorClass.registerMacro("macroWithArgs", (userId, userNewId) => {
 - $Switch
 - (More to Come soon)
 
+### Stage Helpers
+- dateRange
+
 ## 🧠 Inspiration
 Inspired by the repetitive nature of writing MongoDB pipelines manually and the desire for a more readable, chainable syntax in JavaScript.
 

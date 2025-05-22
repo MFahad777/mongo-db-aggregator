@@ -406,4 +406,68 @@ describe('Aggregator Use Cases', () => {
     ]);
   });
 
+  it('should add an inclusive date range match stage by default', () => {
+
+    const result = aggregator(Model)
+    .dateRange('createdAt', '2024-01-01', '2024-12-31').toJSON();
+
+    expect(result).toEqual([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date('2024-01-01'),
+            $lte: new Date('2024-12-31'),
+          },
+        },
+      },
+    ]);
+  });
+
+  it('should add an exclusive date range match stage when inclusive is false', () => {
+    const result = aggregator(Model)
+    .dateRange('createdAt', '2024-01-01', '2024-12-31', { inclusive: false }).toJSON;
+
+    expect(result).toEqual([
+      {
+        $match: {
+          createdAt: {
+            $gt: new Date('2024-01-01'),
+            $lt: new Date('2024-12-31'),
+          },
+        },
+      },
+    ]);
+  });
+
+  it('should add only a lower bound when "to" is not provided', () => {
+    const result = aggregator(Model)
+    .dateRange('createdAt', '2024-01-01', null).toJSON();
+
+    expect(result).toEqual([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date('2024-01-01'),
+          },
+        },
+      },
+    ]);
+  });
+
+  it('should add only an upper bound when "from" is not provided', () => {
+
+    const result = aggregator(Model)
+    .dateRange('createdAt', null, '2024-12-31').toJSON();
+
+    expect(result).toEqual([
+      {
+        $match: {
+          createdAt: {
+            $lte: new Date('2024-12-31'),
+          },
+        },
+      },
+    ]);
+  });
+
 });

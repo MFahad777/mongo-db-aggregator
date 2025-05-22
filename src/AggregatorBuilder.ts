@@ -8,6 +8,13 @@ type MacroFunction = (...args : any[]) => Record<string, any> | Record<string, a
 
 type AggBuilder<T> = Omit<AggregatorBuilder<T>, 'exec' | 'toJSON'>;
 
+type DateRange = {
+    field: string,
+    from?: Date | string | null,
+    to?: Date | string | null,
+    options?: { inclusive?: boolean }
+}
+
 export class AggregatorBuilder<T> {
     private pipeline: Object[] = [];
 
@@ -68,6 +75,28 @@ export class AggregatorBuilder<T> {
             this.pipeline[lastIndex] = { $match: mergedMatch };
         } else {
             this.pipeline.push({ $match: query });
+        }
+
+        return this;
+    }
+
+    dateRange(data : DateRange): this {
+
+        const {
+            to,
+            field,
+            options,
+            from
+        } = data
+
+        const range : Record<string, Date | string | null> = {};
+        const inclusive = options?.inclusive !== false;
+
+        if (from) range[inclusive ? "$gte" : "$gt"] = new Date(from);
+        if (to) range[inclusive ? "$lte" : "$lt"] = new Date(to);
+
+        if (Object.keys(range).length > 0) {
+            this.match({ [field]: range });
         }
 
         return this;

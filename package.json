@@ -1,6 +1,6 @@
 {
   "name": "mongo-db-aggregator",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Chainable MongoDB aggregation builder for Node.js and Mongoose",
   "main": "dist/index.js",
   "scripts": {
